@@ -1,15 +1,11 @@
 import React from 'react';
-import {GlobalProvider} from '@/context/globalContext';
-import styles from './index.less';
+import { GlobalProvider } from '@/context/globalContext';
+import Home from './home/index';
 
 const App: React.FunctionComponent = () => {
   return (
-    <GlobalProvider>
-      {/* Logo */}
-      <div className={styles.logo}>
-      </div>
-      {/* 导航 */}
-      ll
+    <GlobalProvider >
+      <Home />
     </GlobalProvider>
   );
 }

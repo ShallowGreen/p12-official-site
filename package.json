@@ -8,6 +8,9 @@
     "precommit": "lint-staged"
   },
   "dependencies": {
+    "ahooks": "^3.3.12",
+    "eventemitter3": "^4.0.7",
+    "lodash-es": "^4.17.21",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   },
@@ -31,8 +34,14 @@
     "umi-types": "^0.3.0"
   },
   "lint-staged": {
-    "*.{ts,tsx}": ["eslint --fix", "git add"],
-    "*.{js,jsx}": ["eslint --fix", "git add"]
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "engines": {
     "node": ">=8.0.0"
