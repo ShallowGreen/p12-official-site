@@ -1,8 +1,10 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { MENU_LIST, MenuListType } from '@/constant/menuConfig';
 import { useGlobal } from '@/hooks/useGlobal';
 import { PageIDType } from '@/constant';
+import { useDebounceFn } from 'ahooks';
 import classnames from 'classnames';
+import { indexOf } from 'lodash-es';
 import { EE } from './index.utils';
 import styles from './index.less';
 
@@ -13,9 +15,9 @@ const Home: React.FunctionComponent<IHomeProps> = (props) => {
     const { pageID, setPageID, isLoading } = useGlobal();
     console.log(pageID, 'home');
 
-    useEffect(()=> {
-        if(isLoading){
-            EE.on('done', ()=> {
+    useEffect(() => {
+        if (isLoading) {
+            EE.on('done', () => {
                 setPageID(PageIDType.Vision)
             })
         }
@@ -24,12 +26,50 @@ const Home: React.FunctionComponent<IHomeProps> = (props) => {
         }
     }, [isLoading, setPageID])
 
+    const { run } = useDebounceFn(
+        (dy: number) => {
+            const pageArray = MENU_LIST.filter(i => i.type !== PageIDType.Loading).map(i => i.type);
+
+            let index = indexOf(pageArray, pageID);
+            const length = pageArray.length;
+            // 如果当前是第一页，只能往后滚，如果当前是最后一页，只能往前滚
+            // 最大翻页数， 默认为1
+            const maxTurn = 1;
+
+            if (dy > 0) {
+                // 下一页，并且当前页不能是最后一页
+                if (index !== length - 1) {
+                    index++;
+                } else {
+                    return
+                }
+            } else {
+                if (index !== 0) {
+                    index--;
+                } else {
+                    return
+                }
+            }
+
+            setPageID(pageArray[index]);
+        },
+        {
+            wait: 500,
+        },
+    );
+
     const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
-        console.log(e.deltaY);
         // 如果正在加载界面或者已经正在滚动，不处理
+        if (isLoading) {
+            return
+        }
 
-        // 如果当前是第一页，只能往后滚，如果当前是最后一夜，只能往前滚
-
+        // 轻微滚动不跳页
+        if (Math.abs(e.deltaY) < 30) {
+            return
+        }
+        // 500ms防抖，只执行最后一次
+        run(e.deltaY);
     }
 
     return <div onWheel={handleWheel} className={classnames(styles.container, isLoading ? styles.appLoading : null)}>

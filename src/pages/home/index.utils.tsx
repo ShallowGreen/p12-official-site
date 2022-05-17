@@ -4,6 +4,6 @@ import { sleep } from '@/utils/index';
 export const EE = new EventEmitter();
 
 // 测试代码
-// sleep(10000).then(()=> {
-//     EE.emit('done', 1)
-// })
+sleep(2000).then(()=> {
+    EE.emit('done', 1)
+})
