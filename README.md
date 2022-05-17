@@ -40,7 +40,8 @@ Context全局存储Page ID，点击导航切换Page ID，滚动鼠标切换页�
 
 ## Loading页面
 
-1. 初始化为Loading页面
+1. 初始化为Loading页面，其他元素处于visibility hidden状态，初cotent之外
 2. 因为WebGL需要加载模型，等待.obj .glb等模型文件加载完成，需要实时进度，全部模型加载完成后进入Vision页面，用Emitter实现
-3. 寻找类似炫酷的Threejs界面去做页面支撑
+3. 寻找类似炫酷的界面去做页面支撑，根据页面效果查到该效果为Fluid Simulation，因为是复刻流程，反过来倒推了，寻找fluid simulation，然后针对效果做调整。[WebGL-Fluid-Simulation](https://github.com/PavelDoGreat/WebGL-Fluid-Simulation) 实际情况应该是先知道有这个特效，再去做这个特效（这里的实现应该是有什么用什么，而不是非要完成这个效果，粒子效果风格搭的上的话也行，找素材耗时）。把script的js代码拷贝过来，删除ga有关的代码就可以了。
+4. 页面之间的切换，loading => opacity:0, Vision => opacity:1 要做慢隐、慢显
 
