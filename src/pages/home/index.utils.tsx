@@ -3,7 +3,7 @@ import { sleep } from '@/utils/index';
 
 export const EE = new EventEmitter();
 
-
-sleep(10000).then(()=> {
-    EE.emit('done', 1)
-})
+// 测试代码
+// sleep(10000).then(()=> {
+//     EE.emit('done', 1)
+// })
