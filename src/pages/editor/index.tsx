@@ -4,7 +4,7 @@ interface IEditorProps {
 }
 
 const Editor: React.FunctionComponent<IEditorProps> = (props) => {
-  return <div>
+  return <div style={{color: '#fff', background: "eee"}}>
       Editor
   </div>;
 };

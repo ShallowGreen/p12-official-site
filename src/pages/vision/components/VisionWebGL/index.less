@@ -1,1 +1,50 @@
+@import '../../../../styles/variables.less';
 
+.visionText {
+  pointer-events: none;
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  .textItem {
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.5s;
+    color: #fff;
+    top: 50%;
+    transform: translate(0, -64%);
+    right: (130 / @ScreenWidth * 100%);
+  }
+  &::before {
+    background-position: 100%;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    content: '';
+    display: block;
+    height: 7px;
+    left: -15px;
+    position: absolute;
+    top: 10px;
+    -webkit-transform: translate(-100%);
+    transform: translate(-100%);
+    background: url(../../../../assets/line.png);
+    width: 50%;
+    height: 50%;
+  }
+  .activeItem {
+    opacity: 1;
+    transition-delay: 0.6s;
+  }
+  .visionTextTitle {
+    font-size: 27px;
+    line-height: 27px;
+  }
+  .visionTextDesc {
+    font-size: 16px;
+    line-height: 20px;
+    opacity: 0.6;
+    margin-top: 15px;
+  }
+}

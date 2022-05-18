@@ -1,4 +1,4 @@
-import React, { useRef, useLayoutEffect } from 'react';
+import React, { useRef, useLayoutEffect, useState } from 'react';
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -9,7 +9,8 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { EE } from '@/pages/home/index.utils';
 import { PageIDType } from '@/constant/index'
 import { min } from 'lodash-es';
-import './index.less';
+import classnames from 'classnames';
+import styles from './index.less';
 
 interface IVisionWebGLProps {
 }
@@ -19,8 +20,8 @@ const POINT_DATA = [
     {
         // 寿司店
         position: new THREE.Vector3(1.6, 1.7, 0.3),
-        camera: [],
-        data: { 
+        camera: new THREE.Vector3(8, 2, 0),
+        data: {
             title: '寿司屋',
             desc: <>
                 寿司のすべての部分が私たちの魂に注意深く注入されています
@@ -32,8 +33,8 @@ const POINT_DATA = [
     {
         // 理髪店
         position: new THREE.Vector3(2.3, 0, 1.3),
-        camera: [],
-        data: { 
+        camera: new THREE.Vector3(8, 2, 0),
+        data: {
             title: '理髪店',
             desc: <>
                 あなたのサービスで超素晴らしい先生トニー
@@ -45,8 +46,8 @@ const POINT_DATA = [
     {
         // 武蔵野園
         position: new THREE.Vector3(1.8, 0.3, -1.7),
-        camera: [],
-        data: { 
+        camera: new THREE.Vector3(0, 2, -8),
+        data: {
             title: '武蔵野園',
             desc: <>
                 町で最も新鮮なシーフードはここで購入でき、30分で行くことができます。
@@ -58,8 +59,8 @@ const POINT_DATA = [
     {
         // 海洋
         position: new THREE.Vector3(-1, 0.2, 1.5),
-        camera: [],
-        data: { 
+        camera: new THREE.Vector3(0, 2, 8),
+        data: {
             title: '海洋',
             desc: <>
                 町で最も新鮮な花を持って、2時間のスピード
@@ -72,13 +73,14 @@ const POINT_DATA = [
 
 const VisionWebGL: React.FunctionComponent<IVisionWebGLProps> = (props) => {
     const containerRef = useRef<HTMLDivElement>(null);
+    const [active, setActive] = useState<number | null>(null);
 
     useLayoutEffect(() => {
         let mixer: THREE.AnimationMixer;
         const clock = new THREE.Clock();
         const container = containerRef.current as HTMLDivElement;
         let isAutoRotate: boolean = true;
-        let root:THREE.Group;
+        let root: THREE.Group;
 
         // FPS
         // const stats = new Stats();
@@ -99,7 +101,7 @@ const VisionWebGL: React.FunctionComponent<IVisionWebGLProps> = (props) => {
         scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
 
         root = new THREE.Group();
-		scene.add( root );
+        scene.add(root);
 
         const labelRenderer = new CSS2DRenderer();
         labelRenderer.setSize(container.clientWidth, container.clientHeight);
@@ -107,8 +109,8 @@ const VisionWebGL: React.FunctionComponent<IVisionWebGLProps> = (props) => {
         // labelRenderer.domElement.style.top = '0px';
         labelRenderer.domElement.style.pointerEvents = 'none';
         labelRenderer.domElement.className = 'vision-canvas';
-        container.appendChild( labelRenderer.domElement );
-        
+        container.appendChild(labelRenderer.domElement);
+
         // 初始化相机
         const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 100);
         camera.position.set(5, 2, 8);
@@ -154,7 +156,7 @@ const VisionWebGL: React.FunctionComponent<IVisionWebGLProps> = (props) => {
 
             animate();
             EE.emit(`progress.${PageIDType.Vision}`, 1);
-            
+
 
         }, function (xhr) {
             const loaded = xhr.loaded;
@@ -168,28 +170,37 @@ const VisionWebGL: React.FunctionComponent<IVisionWebGLProps> = (props) => {
 
         });
 
-        const handleClick = (index: number) => {
-            const data = POINT_DATA[index];
-            console.log(data);
+        const handleReset = () => {
+
+            console.log('upupupu');
             
-            // 停止自动旋转
-            controls.autoRotate = false;
-            // 固定摄像头位置
-           
-            // 隐藏所有点
         }
 
-        POINT_DATA.forEach((item, index)=> {
+        const handleClick = (index: number) => {
+            // TODO 完善效果
+            // const data = POINT_DATA[index];
+            // console.log(data);
+            // setActive(index)
+            // // 停止自动旋转
+            // controls.autoRotate = false;
+            // // 固定摄像头位置
+            // camera.position.set(data.camera.x, data.camera.y, data.camera.z);
+            // // 隐藏所有点
+            // root.layers.set(0)
+        
+        }
+
+        POINT_DATA.forEach((item, index) => {
             const div = document.createElement('div');
             div.className = 'vision-label';
             // div.textContent = 'test'
-            const label = new CSS2DObject( div );
-            label.position.set( item.position.x, item.position.y, item.position.z );
-            root.add( label );
+            const label = new CSS2DObject(div);
+            label.position.set(item.position.x, item.position.y, item.position.z);
+            root.add(label);
 
             div.addEventListener('click', () => handleClick(index))
         })
-        
+
 
         window.onresize = function () {
 
@@ -197,7 +208,7 @@ const VisionWebGL: React.FunctionComponent<IVisionWebGLProps> = (props) => {
             camera.updateProjectionMatrix();
 
             renderer.setSize(window.innerWidth, window.innerHeight);
-            labelRenderer.setSize( window.innerWidth, window.innerHeight );
+            labelRenderer.setSize(window.innerWidth, window.innerHeight);
 
         };
 
@@ -215,14 +226,27 @@ const VisionWebGL: React.FunctionComponent<IVisionWebGLProps> = (props) => {
             // stats.update();
 
             renderer.render(scene, camera);
-            labelRenderer.render( scene, camera );
+            labelRenderer.render(scene, camera);
 
         }
 
     }, [])
 
     return <div ref={containerRef}>
-
+        <div className={styles.visionText}>
+            {
+                POINT_DATA.map((item, index) => {
+                    return <div key={item.data.title} className={(classnames(styles.textItem, active === index ? styles.activeItem : null))}>
+                        <div className={styles.visionTextTitle}>
+                            {item.data.title}
+                        </div>
+                        <div className={styles.visionTextDesc}>
+                            {item.data.desc}
+                        </div>
+                    </div>
+                })
+            }
+        </div>
     </div>;
 };
 
