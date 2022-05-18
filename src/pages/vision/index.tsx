@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useGlobal } from '@/hooks/useGlobal';
 import classnames from 'classnames';
+import VisionWebGL from './components/VisionWebGL'
 import styles from './index.less';
 interface IVisionProps {
 }
@@ -9,6 +10,7 @@ const Vision: React.FunctionComponent<IVisionProps> = (props) => {
   const { pageID, setPageID } = useGlobal();
 
   return <div className={styles.vision}>
+    <VisionWebGL />
     <div className={styles.info}>
       <div className={styles.projectName}></div>
       <div className={styles.subTitle}>

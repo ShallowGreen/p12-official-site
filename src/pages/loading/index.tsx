@@ -1,15 +1,26 @@
-import React, { useRef } from 'react';
+import React, { useRef, useLayoutEffect } from 'react';
 import classnames from 'classnames';
 import WebGLFluidSimulation from './components/WebGLFluidSimulation';
 import styles from './index.less';
 import LoadingLogo from '@/assets/loading-logo.png';
+import { EE } from '@/pages/home/index.utils';
 
 const Loading: React.FunctionComponent = () => {
     const percentRef = useRef<HTMLSpanElement>(null);
 
+    useLayoutEffect(() => {
+        EE.on('progress', (percent) => {
+            console.log(percent);
+            if (percentRef.current) {
+                percentRef.current!.innerHTML = `${(percent * 100).toFixed(0)}` || '0'
+            }
+        })
+    }, [])
+
+
     return <div className={styles.loading}>
         {/* 动效 */}
-        <WebGLFluidSimulation/>
+        <WebGLFluidSimulation />
         {/* Logo */}
         <div className={styles.logo}>
             <img src={LoadingLogo} alt="P12" className={styles.logoImg} />
