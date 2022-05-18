@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useState } from 'react';
 import { PageIDType } from '@/constant';
-import '@/global.css';
+
 
 export type GlobalContextT = {
   pageID: PageIDType

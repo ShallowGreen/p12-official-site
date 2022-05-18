@@ -18,14 +18,53 @@ interface IVisionWebGLProps {
 const POINT_DATA = [
     {
         // 寿司店
-        position: [],
+        position: new THREE.Vector3(1.6, 1.7, 0.3),
         camera: [],
         data: { 
             title: '寿司屋',
             desc: <>
                 寿司のすべての部分が私たちの魂に注意深く注入されています
                 <br />
-                町の3階の南東の角にあります
+                町の南東の角にある3階にあります
+            </>
+        }
+    },
+    {
+        // 理髪店
+        position: new THREE.Vector3(2.3, 0, 1.3),
+        camera: [],
+        data: { 
+            title: '理髪店',
+            desc: <>
+                あなたのサービスで超素晴らしい先生トニー
+                <br />
+                町の南東の角にある1階にあります
+            </>
+        }
+    },
+    {
+        // 武蔵野園
+        position: new THREE.Vector3(1.8, 0.3, -1.7),
+        camera: [],
+        data: { 
+            title: '武蔵野園',
+            desc: <>
+                町で最も新鮮なシーフードはここで購入でき、30分で行くことができます。
+                <br />
+                町の北東の角にある1階にあります
+            </>
+        }
+    },
+    {
+        // 海洋
+        position: new THREE.Vector3(-1, 0.2, 1.5),
+        camera: [],
+        data: { 
+            title: '海洋',
+            desc: <>
+                町で最も新鮮な花を持って、2時間のスピード
+                <br />
+                町の南西の角にある1階にあります
             </>
         }
     }
@@ -66,12 +105,14 @@ const VisionWebGL: React.FunctionComponent<IVisionWebGLProps> = (props) => {
         labelRenderer.setSize(container.clientWidth, container.clientHeight);
         // labelRenderer.domElement.style.position = 'absolute';
         // labelRenderer.domElement.style.top = '0px';
+        labelRenderer.domElement.style.pointerEvents = 'none';
         labelRenderer.domElement.className = 'vision-canvas';
         container.appendChild( labelRenderer.domElement );
         
         // 初始化相机
         const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 100);
         camera.position.set(5, 2, 8);
+
 
         // 初始化控制器
         const controls = new OrbitControls(camera, renderer.domElement);
@@ -96,13 +137,14 @@ const VisionWebGL: React.FunctionComponent<IVisionWebGLProps> = (props) => {
         dracoLoader.setDecoderPath('https://medusa-test.oss-cn-hangzhou.aliyuncs.com/TEST/gltf/');
         // dracoLoader.setDecoderConfig({type: 'js'});
         // dracoLoader.preload();
+        let model: THREE.Group;
 
         const loader = new GLTFLoader();
         loader.setDRACOLoader(dracoLoader);
         loader.load('https://fe-cloud.uni-ubi.com/other/1652841762878-LittlestTokyo.glb', function (gltf) {
             console.log(gltf);
 
-            const model = gltf.scene;
+            model = gltf.scene;
             model.position.set(1, 1, 0);
             model.scale.set(0.01, 0.01, 0.01);
             scene.add(model);
@@ -112,6 +154,7 @@ const VisionWebGL: React.FunctionComponent<IVisionWebGLProps> = (props) => {
 
             animate();
             EE.emit(`progress.${PageIDType.Vision}`, 1);
+            
 
         }, function (xhr) {
             const loaded = xhr.loaded;
@@ -125,24 +168,36 @@ const VisionWebGL: React.FunctionComponent<IVisionWebGLProps> = (props) => {
 
         });
 
-        POINT_DATA.forEach(item=> {
-            const div = document.createElement('div');
-            div.className = 'visionLabel';
-            div.textContent = 'sasddasdasdadasdasdasdas'
-            div.style.marginTop = '-1em';
-            const label = new CSS2DObject( div );
-            label.position.set( 0, 0, 0 );
-            root.add( label );
-            console.log(1111);
-            label.layers.set( 0 );
+        const handleClick = (index: number) => {
+            const data = POINT_DATA[index];
+            console.log(data);
+            
+            // 停止自动旋转
+            controls.autoRotate = false;
+            // 固定摄像头位置
+           
+            // 隐藏所有点
+        }
 
+        POINT_DATA.forEach((item, index)=> {
+            const div = document.createElement('div');
+            div.className = 'vision-label';
+            // div.textContent = 'test'
+            const label = new CSS2DObject( div );
+            label.position.set( item.position.x, item.position.y, item.position.z );
+            root.add( label );
+
+            div.addEventListener('click', () => handleClick(index))
         })
+        
+
         window.onresize = function () {
 
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
 
             renderer.setSize(window.innerWidth, window.innerHeight);
+            labelRenderer.setSize( window.innerWidth, window.innerHeight );
 
         };
 
@@ -160,6 +215,7 @@ const VisionWebGL: React.FunctionComponent<IVisionWebGLProps> = (props) => {
             // stats.update();
 
             renderer.render(scene, camera);
+            labelRenderer.render( scene, camera );
 
         }
 
