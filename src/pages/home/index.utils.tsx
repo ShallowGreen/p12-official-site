@@ -17,7 +17,6 @@ emitArray.forEach(item=> {
         percentArray[index] = percent;
         const avgPercent = mean(percentArray).toFixed(2);
         EE.emit('progress', avgPercent);
-        console.log(avgPercent, 'avgPercent');
         if(Number(avgPercent) === 1){
             EE.emit('done')
         }

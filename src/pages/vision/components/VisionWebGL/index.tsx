@@ -144,8 +144,6 @@ const VisionWebGL: React.FunctionComponent<IVisionWebGLProps> = (props) => {
         const loader = new GLTFLoader();
         loader.setDRACOLoader(dracoLoader);
         loader.load('https://fe-cloud.uni-ubi.com/other/1652841762878-LittlestTokyo.glb', function (gltf) {
-            console.log(gltf);
-
             model = gltf.scene;
             model.position.set(1, 1, 0);
             model.scale.set(0.01, 0.01, 0.01);
@@ -172,8 +170,6 @@ const VisionWebGL: React.FunctionComponent<IVisionWebGLProps> = (props) => {
 
         const handleReset = () => {
 
-            console.log('upupupu');
-            
         }
 
         const handleClick = (index: number) => {

@@ -10,7 +10,6 @@ const Loading: React.FunctionComponent = () => {
 
     useLayoutEffect(() => {
         EE.on('progress', (percent) => {
-            console.log(percent);
             if (percentRef.current) {
                 percentRef.current!.innerHTML = `${(percent * 100).toFixed(0)}` || '0'
             }
