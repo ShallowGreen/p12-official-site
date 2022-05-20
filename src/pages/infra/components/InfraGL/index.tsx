@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useRef, useLayoutEffect } from 'react';
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
@@ -7,14 +7,13 @@ import {
     CSS2DRenderer
 } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
 import styles from './index.less';
-import init from './three';
 interface IInfraGLProps {
 }
 
 const InfraGL: React.FunctionComponent<IInfraGLProps> = (props) => {
     const containerRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const container = containerRef.current as HTMLDivElement;
         const manager = new THREE.LoadingManager();
         manager.addHandler(/\.dds$/i, new DDSLoader());
