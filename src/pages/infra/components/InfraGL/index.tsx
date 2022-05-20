@@ -3,6 +3,9 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { DDSLoader } from 'three/examples/jsm/loaders/DDSLoader.js';
+import { EE } from '@/pages/home/index.utils';
+import { PageIDType } from '@/constant/index';
+import { min } from 'lodash-es';
 import {
     CSS2DRenderer
 } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
@@ -109,8 +112,6 @@ const InfraGL: React.FunctionComponent<IInfraGLProps> = (props) => {
 
             if (dirLight) return
 
-            console.log(dirLight, 'dirLight');
-            
             dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
             // dirLight.color = new THREE.Color("rgb(255, 255, 255)");
             dirLight.position.set(- 1, 1.75, 1);
@@ -202,10 +203,18 @@ const InfraGL: React.FunctionComponent<IInfraGLProps> = (props) => {
                         transparent: true,
                         opacity: 0.2,
                     });;
-                    elementLGroup.add(deerR)
+                    elementLGroup.add(deerR);
+                    deerL.castShadow = true
+                    deerL.receiveShadow = true
+                    deerR.castShadow = true
+                    deerR.receiveShadow = true
+                    EE.emit(`progress.${PageIDType.Infra}.deer`, 1);
                 },
-                function () {
-
+                function (xhr) {
+                    const loaded = xhr.loaded;
+                    const total = xhr.total;
+                    const percent = (loaded / total);
+                    EE.emit(`progress.${PageIDType.Infra}.deer`, min([percent, 0.95]));
                 },
                 (error) => {
                     console.log(error);
@@ -231,9 +240,17 @@ const InfraGL: React.FunctionComponent<IInfraGLProps> = (props) => {
                         opacity: 0.2,
                     });
                     elementLGroup.add(cloud1L)
+                    cloud1L.castShadow = true
+                    cloud1L.receiveShadow = true
+                    cloud1.castShadow = true
+                    cloud1.receiveShadow = true
+                    EE.emit(`progress.${PageIDType.Infra}.cloud1`, 1);
                 },
-                function () {
-
+                function (xhr) {
+                    const loaded = xhr.loaded;
+                    const total = xhr.total;
+                    const percent = (loaded / total);
+                    EE.emit(`progress.${PageIDType.Infra}.cloud1`, min([percent, 0.95]));
                 },
                 (error) => {
                     console.log(error);
@@ -258,9 +275,17 @@ const InfraGL: React.FunctionComponent<IInfraGLProps> = (props) => {
                         opacity: 0.2,
                     });
                     elementLGroup.add(cloud2L)
+                    cloud2L.castShadow = true
+                    cloud2L.receiveShadow = true
+                    cloud2.castShadow = true
+                    cloud2.receiveShadow = true
+                    EE.emit(`progress.${PageIDType.Infra}.cloud2`, 1);
                 },
-                function () {
-
+                function (xhr) {
+                    const loaded = xhr.loaded;
+                    const total = xhr.total;
+                    const percent = (loaded / total);
+                    EE.emit(`progress.${PageIDType.Infra}.cloud2`, min([percent, 0.95]));
                 },
                 (error) => {
                     console.log(error);
@@ -286,14 +311,24 @@ const InfraGL: React.FunctionComponent<IInfraGLProps> = (props) => {
                     });
                     // cloud
                     elementLGroup.add(cloud3L)
+                    cloud3L.castShadow = true
+                    cloud3L.receiveShadow = true
+                    cloud3.castShadow = true
+                    cloud3.receiveShadow = true
+                    EE.emit(`progress.${PageIDType.Infra}.cloud3`, 1);
                 },
-                function () {
-
+                function (xhr) {
+                    const loaded = xhr.loaded;
+                    const total = xhr.total;
+                    const percent = (loaded / total);
+                    EE.emit(`progress.${PageIDType.Infra}.cloud3`, min([percent, 0.95]));
                 },
                 (error) => {
                     console.log(error);
                 }
             );
+
+
 
         // 鼠标移动事件
         const mouseMove = function (event: any) {

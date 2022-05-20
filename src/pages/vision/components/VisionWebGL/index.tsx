@@ -160,7 +160,7 @@ const VisionWebGL: React.FunctionComponent<IVisionWebGLProps> = (props) => {
             const loaded = xhr.loaded;
             const total = xhr.total;
             const percent = (loaded / total);
-            EE.emit(`progress.${PageIDType.Vision}`, min([percent, 0.99]));
+            EE.emit(`progress.${PageIDType.Vision}`, min([percent, 0.95]));
 
         }, function (e) {
 
