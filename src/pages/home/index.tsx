@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { MENU_LIST, MenuListType } from '@/constant/menuConfig';
 import { useGlobal } from '@/hooks/useGlobal';
+import { useWeb3 } from '@/hooks/useWeb3';
 import { PageIDType } from '@/constant';
 import { useDebounceFn } from 'ahooks';
 import classnames from 'classnames';
@@ -13,7 +14,7 @@ interface IHomeProps {
 
 const Home: React.FunctionComponent<IHomeProps> = (props) => {
     const { pageID, setPageID, isLoading } = useGlobal();
-    console.log(pageID, 'home');
+    const { address, connect, disconnect } = useWeb3();
 
     useEffect(() => {
         if (isLoading) {
@@ -72,6 +73,23 @@ const Home: React.FunctionComponent<IHomeProps> = (props) => {
         run(e.deltaY);
     }
 
+    const connectToggle = async () => {
+        try {
+            if (address) {
+                disconnect();
+                alert(
+                    'To fully disconnect, click "Connected" on MetaMask and disconnect your account.',
+                );
+            } else {
+                await connect();
+            }
+        } catch (error) {
+            const errorMessage =
+                error instanceof Error ? error.message : 'Unknown Error';
+            alert(`Connection attempt failed: ${errorMessage}`);
+        }
+    };
+
     return <div onWheel={handleWheel} className={classnames(styles.container, isLoading ? styles.appLoading : null)}>
         {/* Logo */}
         <div className={styles.logo}></div>
@@ -87,7 +105,10 @@ const Home: React.FunctionComponent<IHomeProps> = (props) => {
                 })
             }
         </div>
-        {/* TODO 钱包连接 */}
+        {/* 钱包连接 */}
+        <div className={styles.wallet} onClick={connectToggle}>
+            {address ? 'Disconnect' : 'Connect Wallet'}
+        </div>
 
         {/* 内容 */}
         <div className={styles.content}>
