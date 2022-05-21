@@ -2,8 +2,10 @@ import React, { useEffect } from 'react';
 import { MENU_LIST, MenuListType } from '@/constant/menuConfig';
 import { useGlobal } from '@/hooks/useGlobal';
 import { useWeb3 } from '@/hooks/useWeb3';
+import { useWalletConnect } from '@/hooks/useWalletConnect';
 import { PageIDType } from '@/constant';
 import { useDebounceFn } from 'ahooks';
+import {ellipseAddress } from '@/utils/index';
 import classnames from 'classnames';
 import { indexOf } from 'lodash-es';
 import { EE } from './index.utils';
@@ -14,7 +16,11 @@ interface IHomeProps {
 
 const Home: React.FunctionComponent<IHomeProps> = (props) => {
     const { pageID, setPageID, isLoading } = useGlobal();
-    const { address, connect, disconnect } = useWeb3();
+    // const { address, connect, disconnect } = useWeb3();
+    const { connect, walletInfo, killSession } = useWalletConnect();
+
+    console.log(walletInfo, 'walletInfo');
+
 
     useEffect(() => {
         if (isLoading) {
@@ -73,22 +79,22 @@ const Home: React.FunctionComponent<IHomeProps> = (props) => {
         run(e.deltaY);
     }
 
-    const connectToggle = async () => {
-        try {
-            if (address) {
-                disconnect();
-                alert(
-                    'To fully disconnect, click "Connected" on MetaMask and disconnect your account.',
-                );
-            } else {
-                await connect();
-            }
-        } catch (error) {
-            const errorMessage =
-                error instanceof Error ? error.message : 'Unknown Error';
-            alert(`Connection attempt failed: ${errorMessage}`);
-        }
-    };
+    // const connectToggle = async () => {
+    //     try {
+    //         if (address) {
+    //             disconnect();
+    //             alert(
+    //                 'To fully disconnect, click "Connected" on MetaMask and disconnect your account.',
+    //             );
+    //         } else {
+    //             await connect();
+    //         }
+    //     } catch (error) {
+    //         const errorMessage =
+    //             error instanceof Error ? error.message : 'Unknown Error';
+    //         alert(`Connection attempt failed: ${errorMessage}`);
+    //     }
+    // };
 
     return <div onWheel={handleWheel} className={classnames(styles.container, isLoading ? styles.appLoading : null)}>
         {/* Logo */}
@@ -106,9 +112,17 @@ const Home: React.FunctionComponent<IHomeProps> = (props) => {
             }
         </div>
         {/* 钱包连接 */}
-        <div className={styles.wallet} onClick={connectToggle}>
-            {address ? 'Disconnect' : 'Connect Wallet'}
+        <div className={styles.wallet}>
+            {
+                walletInfo.address ?
+                    <div className={styles.disconnectWarp}>
+                        <div className={styles.address}>{ellipseAddress(walletInfo.address)}</div>
+                        <div className={styles.disconnect} onClick={killSession}>Disconnect</div>
+                    </div>
+                    : <div onClick={connect} className={styles.connect}>Wallet Connect</div>
+            }
         </div>
+
 
         {/* 内容 */}
         <div className={styles.content}>
